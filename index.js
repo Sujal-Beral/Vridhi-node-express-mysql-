@@ -11,6 +11,7 @@ const schedulerService = require('./services/schedulerService');
 
 // 3. Create Express application
 const app = express();
+app.set('trust proxy', 1);
 
 // 4. Use middleware
 // Enable CORS for all routes

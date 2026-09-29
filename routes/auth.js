@@ -67,7 +67,7 @@ router.post('/register', async (req, res) => {
         req.session.user = { id: userId, full_name: full_name.trim(), email: normalizedEmail, category };
 
         // Send Welcome / Verification Email in background (does not block registration response)
-        const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+        const appUrl = process.env.BASE_URL || process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
         const verificationUrl = `${appUrl}/api/auth/verify-email?token=${rawVerificationToken}`;
 
         emailService.sendWelcomeEmail({
@@ -181,7 +181,7 @@ router.post('/forgot-password', async (req, res) => {
             [hashed, expires, user.id]
         );
 
-        const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+        const appUrl = process.env.BASE_URL || process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
         const resetUrl = `${appUrl}/reset-password.html?token=${rawToken}`;
 
         emailService.sendPasswordResetEmail({

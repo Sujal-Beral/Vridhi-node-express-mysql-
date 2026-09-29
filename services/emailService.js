@@ -23,6 +23,13 @@ function escapeHtml(str) {
 }
 
 /**
+ * Helper: Resolve base application URL from environment variables
+ */
+function getAppUrl() {
+    return process.env.BASE_URL || process.env.APP_URL || 'http://localhost:3000';
+}
+
+/**
  * Helper: Mask email address for safe logging
  */
 function maskEmail(email) {
@@ -134,7 +141,7 @@ async function verifyTransporter() {
  * Central Branded Email HTML Wrapper
  */
 function buildEmailHtml({ title, badge, greetingName, bodyContent, ctaButton, recipientEmail }) {
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
     const cleanGreeting = escapeHtml(greetingName || 'Vridhi Member');
     const cleanBadge = badge ? `<span class="badge">${badge}</span>` : '';
     const cleanCta = ctaButton ? `
@@ -375,7 +382,7 @@ async function sendMailHelper({ type, userId, recipient, subject, text, html, at
 async function sendWelcomeEmail({ user, verificationUrl }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
     const verifyLink = verificationUrl || `${appUrl}/api/auth/verify-email`;
 
     const subject = '👋 Welcome to Vridhi — From Earnings to Wealth';
@@ -442,7 +449,7 @@ ${appUrl}
 async function sendPasswordResetEmail({ user, resetUrl }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const subject = '🔒 Reset Your Vridhi Password';
     const text = `Hello ${name},
@@ -499,7 +506,7 @@ ${appUrl}
 async function sendGoalCreatedEmail({ user, goal }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const goalName = goal.name || 'Financial Goal';
     const targetAmount = Number(goal.target_amount) || 0;
@@ -590,7 +597,7 @@ Vridhi Team
 async function sendGoalMilestoneEmail({ user, goal, milestonePct }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const goalName = goal.name || 'Financial Goal';
     const targetAmount = Number(goal.target_amount) || 0;
@@ -718,7 +725,7 @@ async function sendGoalCompletedEmail(params) {
 
     const targetFormatted = formatINR(targetAmount);
     const fromAddress = process.env.EMAIL_FROM || (process.env.EMAIL_USER ? `"Vridhi" <${process.env.EMAIL_USER}>` : 'no-reply@vridhi.org');
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const subject = '🎉 Congratulations! You completed your Vridhi goal';
 
@@ -939,7 +946,7 @@ ${appUrl}
 async function sendGoalDeadlineEmail({ user, goal, daysRemaining }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const goalName = goal.name || 'Financial Goal';
     const targetAmount = Number(goal.target_amount) || 0;
@@ -1031,7 +1038,7 @@ Vridhi Team
 async function sendMonthlyReportEmail({ user, profile, goals, allocation, healthScore, emergencyFund, monthYear }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const reportMonth = monthYear || new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
     const income = Number(profile.monthly_income) || 0;
@@ -1168,7 +1175,7 @@ Vridhi Team
 async function sendQuizResultEmail({ user, survey_type, score, total, percentage, previousAttempt, improvementPoints }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     const isAfterQuiz = survey_type === 'after';
     const quizTitle = isAfterQuiz ? 'After Learning Assessment' : 'Before Learning Baseline';
@@ -1258,7 +1265,7 @@ Vridhi Team
 async function sendFinancialAlertEmail({ user, alertType, alertData }) {
     const recipient = user.email;
     const name = user.full_name || 'Vridhi Member';
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const appUrl = getAppUrl();
 
     let title = 'Financial Health Alert';
     let subject = '⚠️ Vridhi Financial Health Alert';
